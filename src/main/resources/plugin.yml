@@ -1,0 +1,4 @@
+name: MidoMika-SuperHighWay
+version: '${project.version}'
+main: me.mika.midomikasuperhighway.MidoMika_SuperHighWay
+api-version: '1.19'
