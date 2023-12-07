@@ -1,6 +1,8 @@
 package me.mika.midomikasuperhighway.Listeners;
 
 import me.mika.midomikasuperhighway.MidoMika_SuperHighWay;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.*;
@@ -23,7 +25,7 @@ public class WalkOnHighWay implements Listener {
     private Map<UUID, Double> hashSpeed = new HashMap<>();
     private Map<UUID, Double> hashGear = new HashMap<>();
     private static int count = 0;
-    private final List<EntityType> pullAbleEntityTypes = new ArrayList<>(Arrays.asList(EntityType.PIG, EntityType.COW, EntityType.SHEEP, EntityType.CAT, EntityType.CHICKEN));
+    private final List<EntityType> pullAbleEntityTypes = new ArrayList<>(Arrays.asList(EntityType.PIG, EntityType.COW, EntityType.SHEEP, EntityType.CAT, EntityType.CHICKEN, EntityType.VILLAGER));
     private List<Entity> passengers;
 
     @EventHandler
@@ -39,7 +41,8 @@ public class WalkOnHighWay implements Listener {
                     gear += 1;
                     hashSpeed.put(p.getUniqueId(), speed);
                     hashGear.put(p.getUniqueId(), gear);
-                    p.sendMessage(ChatColor.GREEN + "Gear: " + ChatColor.YELLOW + hashGear.get(p.getUniqueId()).intValue());
+//                    p.sendMessage(ChatColor.GREEN + "Gear: " + ChatColor.YELLOW + hashGear.get(p.getUniqueId()).intValue());
+                    sendActionBarMessage(p,ChatColor.GREEN + "Gear: " + ChatColor.YELLOW + hashGear.get(p.getUniqueId()).intValue());
 
                 }
             } else if (e.getAction().name().contains("RIGHT_CLICK") && e.getMaterial() == Material.DIAMOND) {
@@ -50,12 +53,13 @@ public class WalkOnHighWay implements Listener {
                     gear -= 1;
                     hashSpeed.put(p.getUniqueId(), speed);
                     hashGear.put(p.getUniqueId(), gear);
-                    p.sendMessage(ChatColor.GREEN + "Gear: " + ChatColor.YELLOW + hashGear.get(p.getUniqueId()).intValue());
+//                    p.sendMessage(ChatColor.GREEN + "Gear: " + ChatColor.YELLOW + hashGear.get(p.getUniqueId()).intValue());
+                    sendActionBarMessage(p,ChatColor.GREEN + "Gear: " + ChatColor.YELLOW + hashGear.get(p.getUniqueId()).intValue());
                 }
             }else if (e.getAction().name().contains("LEFT_CLICK") && e.getMaterial() != Material.DIAMOND){
                 p.sendMessage(ChatColor.GOLD + "Use Diamond: ");
-                p.sendMessage(ChatColor.GREEN + "Left Click: " + ChatColor.YELLOW + "Accelerate");
-                p.sendMessage(ChatColor.RED + "Right Click: " + ChatColor.YELLOW + "Decelerate");
+                p.sendMessage(ChatColor.YELLOW + "Left Click: " + ChatColor.GREEN + "Accelerate");
+                p.sendMessage(ChatColor.YELLOW + "Right Click: " + ChatColor.RED + "Decelerate");
 
             }
         }
@@ -74,12 +78,14 @@ public class WalkOnHighWay implements Listener {
             if (pullAbleEntityTypes.contains(rightClickedEntity.getType()) && itemOnMainhand == Material.DIAMOND && p.isSneaking() == false) {
                 if (!data.has(new NamespacedKey(MidoMika_SuperHighWay.getPlugin(), "Owner"), PersistentDataType.STRING)) {
                     data.set(new NamespacedKey(MidoMika_SuperHighWay.getPlugin(), "Owner"), PersistentDataType.STRING, p.getName());
-                    p.sendMessage(ChatColor.GREEN + "Marked this " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.GREEN + " as your leashing creature!");
+//                    p.sendMessage(ChatColor.GREEN + "Marked this " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.GREEN + " as your leashing creature!");
+                    sendActionBarMessage(p, ChatColor.GREEN + "Marked this " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.GREEN + " as your leashing creature!");
 
                 } else {
                     String entityOwner = data.get(new NamespacedKey(MidoMika_SuperHighWay.getPlugin(), "Owner"), PersistentDataType.STRING);
                     if (entityOwner.equals(p.getName())) {
-                        p.sendMessage(ChatColor.GREEN + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.GREEN + " already mark as your leashing creature!");
+//                        p.sendMessage(ChatColor.GREEN + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.GREEN + " already mark as your leashing creature!");
+                        sendActionBarMessage(p, ChatColor.GREEN + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.GREEN + " already mark as your leashing creature!");
                         Location targetLocation = rightClickedEntity.getLocation();
                         double radius = 5.0;
                         Collection<Entity> nearbyEntities = targetLocation.getWorld().getNearbyEntities(targetLocation, radius, radius, radius);
@@ -94,7 +100,8 @@ public class WalkOnHighWay implements Listener {
                             }
                         }
                     } else {
-                        p.sendMessage(ChatColor.RED + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.RED + " already mark by someone!");
+//                        p.sendMessage(ChatColor.RED + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.RED + " already mark by someone!");
+                        sendActionBarMessage(p,ChatColor.RED + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.RED + " already mark by someone!");
 
                     }
                 }
@@ -103,11 +110,14 @@ public class WalkOnHighWay implements Listener {
                     String entityOwner = data.get(new NamespacedKey(MidoMika_SuperHighWay.getPlugin(), "Owner"), PersistentDataType.STRING);
 
                     if (entityOwner.equals(p.getName())) {
-                        p.sendMessage(net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + "Unmarked this " + ChatColor.YELLOW + rightClickedEntity.getName() + net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + " as your leashing creature!");
+//                        p.sendMessage(net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + "Unmarked this " + ChatColor.YELLOW + rightClickedEntity.getName() + net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + " as your leashing creature!");
+                        sendActionBarMessage(p, net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + "Unmarked this " + ChatColor.YELLOW + rightClickedEntity.getName() + net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + " as your leashing creature!");
                         data.remove(new NamespacedKey(MidoMika_SuperHighWay.getPlugin(), "Owner"));
 
                     } else {
-                        p.sendMessage(ChatColor.RED + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.RED + " is not marked by you!");
+//                        p.sendMessage(ChatColor.RED + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.RED + " is not marked by you!");
+                        sendActionBarMessage(p, ChatColor.RED + "This " + ChatColor.YELLOW + rightClickedEntity.getName() + ChatColor.RED + " is not marked by you!");
+
 
                     }
                 }
@@ -193,19 +203,24 @@ public class WalkOnHighWay implements Listener {
                     // 检查矿车是否有乘客且是玩家
                     Vector direction = p.getLocation().getDirection();
                     Particle.DustOptions dustOptions = new Particle.DustOptions(Color.fromRGB(102, 102, 153), 2f);
+                    Particle.DustOptions dustOptions2 = new Particle.DustOptions(Color.fromRGB(255,192,203), 2f);
                     Vector particleDirection = p.getLocation().getDirection().normalize();
                     Vector offset = particleDirection.clone().multiply(-2); // 向后偏移
                     Location particleLocation = p.getLocation().add(offset);
 
                     // 在位置生成带颜色的粒子效果
-                    p.spawnParticle(Particle.REDSTONE, particleLocation, 10, 0.125, .125, .125, 0.01, dustOptions);
+                    if (!p.getName().equalsIgnoreCase("Mido")) {
+                        p.spawnParticle(Particle.REDSTONE, particleLocation, 10, 0.125, .125, .125, 0.01, dustOptions);
+                    }else{
+                        p.spawnParticle(Particle.REDSTONE, particleLocation, 10, 0.150, .150, .150, 0.01, dustOptions2);
+                    }
 
                     minecart.setMaxSpeed(7);
                     if (hashSpeed.get(p.getUniqueId()) != null) {
                         minecart.setVelocity(new Vector(direction.normalize().getX(), 0, direction.normalize().getZ()).multiply(hashSpeed.get(p.getUniqueId())).setY(0.25));
                     }
 
-                //因为car飞太高了，所以设置为car以下的1或2格
+                    //因为car飞太高了，所以设置为car以下的1或2格
                 } else if (destoryMinecartBlock.contains(minecart.getLocation().subtract(0, 2, 0).getBlock().getType()) || destoryMinecartBlock.contains(minecart.getLocation().subtract(0, 1, 0).getBlock().getType())) {
                     if (!p.getGameMode().equals(GameMode.CREATIVE)) {
                         p.playSound(p.getLocation(), Sound.ENTITY_ITEM_BREAK, 1, 1);
@@ -228,23 +243,20 @@ public class WalkOnHighWay implements Listener {
     public void onRideVehicle(VehicleEnterEvent e){
         if (e.getVehicle() instanceof Minecart) {
             Minecart minecart = (Minecart) e.getVehicle();
-            PersistentDataContainer data = e.getEntered().getPersistentDataContainer();
-
             if (e.getEntered() instanceof Player) {
                 Player p = (Player) e.getEntered();
                 List<Material> activateMinecartBlock = new ArrayList<>(Arrays.asList(Material.WHITE_WOOL, Material.BLACK_WOOL));
 
                 if (activateMinecartBlock.contains(minecart.getLocation().subtract(0, 1, 0).getBlock().getType())) {
                     // 检查矿车是否有乘客且是玩家
-                    if (e.getEntered() instanceof Player) {
-                        hashSpeed.put(p.getUniqueId(), 0.7);
-                        hashGear.put(p.getUniqueId(), 1.0);
-                        p.sendMessage(ChatColor.GREEN + "Car activate!");
-                        Vector direction = p.getLocation().getDirection();
-                        minecart.setMaxSpeed(1);
-                        minecart.setVelocity(new Vector(direction.normalize().getX(), 0, direction.normalize().getZ()).setY(0.05));
+                    hashSpeed.put(p.getUniqueId(), 0.7);
+                    hashGear.put(p.getUniqueId(), 1.0);
+//                    p.sendMessage(ChatColor.GREEN + "Car activate!");
+                    p.sendTitle(" ", ChatColor.GREEN + "Car activate!", 10 ,0 ,10);
+                    Vector direction = p.getLocation().getDirection();
+                    minecart.setMaxSpeed(1);
+                    minecart.setVelocity(new Vector(direction.normalize().getX(), 0, direction.normalize().getZ()).setY(0.05));
 
-                    }
                 }
             }
         }
@@ -253,11 +265,17 @@ public class WalkOnHighWay implements Listener {
     @EventHandler
     public void onLeaveVehicle(VehicleExitEvent e){
         if (e.getVehicle() instanceof Minecart) {
+            Minecart minecart = (Minecart) e.getVehicle();
             if (e.getExited() instanceof Player) {
                 Player p = (Player) e.getExited();
-                hashSpeed.remove(p.getUniqueId());
-                hashGear.remove(p.getUniqueId());
+                List<Material> activateMinecartBlock = new ArrayList<>(Arrays.asList(Material.WHITE_WOOL, Material.BLACK_WOOL));
 
+                if (activateMinecartBlock.contains(minecart.getLocation().subtract(0, 1, 0).getBlock().getType()) || activateMinecartBlock.contains(minecart.getLocation().subtract(0, 2, 0).getBlock().getType())) {
+                    hashSpeed.remove(p.getUniqueId());
+                    hashGear.remove(p.getUniqueId());
+                    p.sendTitle(" ", net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + "Car deactivate!", 10 ,0 ,10);
+
+                }
             }
         }
     }
@@ -279,5 +297,9 @@ public class WalkOnHighWay implements Listener {
         }else {
 
         }
+    }
+
+    private void sendActionBarMessage(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
 }
