@@ -301,13 +301,16 @@ public class WalkOnHighWay implements Listener {
         Block spawnMinecartBlock = p.getTargetBlockExact(5);
 
         if (spawnMinecartBlock != null && p.getInventory().getItemInMainHand().getType().equals(Material.MINECART)) {
-            if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-                Location location = spawnMinecartBlock.getLocation().add(0, 1, 0);
-                Minecart minecart = (Minecart) p.getWorld().spawnEntity(location, EntityType.MINECART);
+            if (!spawnMinecartBlock.getType().toString().contains("RAIL")) {
+                if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+                    p.sendMessage(spawnMinecartBlock.getType().toString());
+                    Location location = spawnMinecartBlock.getLocation().add(0, 1, 0);
+                    Minecart minecart = (Minecart) p.getWorld().spawnEntity(location, EntityType.MINECART);
                 if (!p.getGameMode().equals(GameMode.CREATIVE)) {
                     p.getInventory().removeItem(new ItemStack(Material.MINECART, 1));
                 }
 
+                }
             }
         }else {
 
