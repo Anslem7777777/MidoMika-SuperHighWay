@@ -141,7 +141,7 @@ public class WalkOnHighWay implements Listener {
     public void onEntityDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             Player p = (Player) event.getEntity();
-            if (!p.getVehicle().isEmpty() && p.getVehicle() instanceof Minecart) {
+            if (p.getVehicle() != null && p.getVehicle() instanceof Minecart) {
                 // Cancel fall damage for players
                 event.setCancelled(true);
 
