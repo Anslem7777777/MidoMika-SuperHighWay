@@ -9,6 +9,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -134,6 +135,18 @@ public class WalkOnHighWay implements Listener {
         minecart.setMaxSpeed(7);
         minecart.setVelocity(vector.multiply(1));
 
+    }
+
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            Player p = (Player) event.getEntity();
+            if (!p.getVehicle().isEmpty() && p.getVehicle() instanceof Minecart) {
+                // Cancel fall damage for players
+                event.setCancelled(true);
+
+            }
+        }
     }
 
     @EventHandler
@@ -276,6 +289,8 @@ public class WalkOnHighWay implements Listener {
                     p.sendTitle(" ", net.md_5.bungee.api.ChatColor.of(new java.awt.Color(255,165,0, 10)) + "Car deactivate!", 10 ,0 ,10);
 
                 }
+                hashSpeed.remove(p.getUniqueId());
+                hashGear.remove(p.getUniqueId());
             }
         }
     }
